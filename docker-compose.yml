@@ -1,0 +1,16 @@
+web:
+  build: .
+  command: "runserver 0.0.0.0:8023"
+  environment:
+      PYTHONUNBUFFERED: 0
+      DJANGO_SETTINGS_MODULE: gsapi.settings.dev
+  entrypoint:
+   - './manage.py'
+  links:
+   - db
+  volumes:
+   - .:/opt/code
+  ports:
+   - "127.0.0.1:8023:8023"
+db:
+  image: postgres:10

@@ -1,0 +1,9 @@
+django<2.1
+django-extensions<2.1
+djangorestframework<3.9
+ipython
+psycopg2<2.8
+pylama<7.5
+pytest-django<3.3
+pytest<3.6
+requests
