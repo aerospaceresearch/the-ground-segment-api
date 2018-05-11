@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'bootstrap4',
     # local apps
+    'accounts',
     'main',
 ]
 
