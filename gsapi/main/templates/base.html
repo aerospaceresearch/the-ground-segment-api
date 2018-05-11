@@ -6,9 +6,17 @@
     <div class="container">
         <h1>{% block bootstrap4_title %}{% block title %}(no title){% endblock %}{% endblock %}</h1>
 
+        {% block nav %}
         <p>
-            <a href="{% url 'home' %}">home</a>
+            {% block nav-home %}<a href="{% url 'home' %}">Home</a>{% endblock %}
+
+            {% if not request.user.is_authenticated %}
+                {% block nav-login %}<a href="{% url 'login' %}">login</a>{% endblock %}
+            {% else %}
+                <a href="{% url 'logout' %}">logout</a>
+            {% endif %}
         </p>
+        {% endblock %}
 
         {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 
