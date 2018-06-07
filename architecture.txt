@@ -1,0 +1,21 @@
+The architecture for the ground segment program i propose uses the following means of adding a task :
+	1.) uploading an appropriate json file describing it to the hot folder
+	2.) send a request with said json file via http ( and later https with tls1.3 and client certs)
+
+after either of is detected, they are entered into a database that gets polled for tasks that should
+be executed with a specified interval.
+
+As a unique identifier, we use RSA4096 private keys which every station has to use, since the keypair
+is also used to send encrypted messages over the net. As a symmetric encryption, AES-256 will be used,
+to generate hash values to check for correctness SHA-3. In order to handle big data exchanges zlib might be used.
+
+If files are to be transferred, they should be embedded into json as well and a format without 
+lossless compression must be used.
+
+As a database technology, mongoDB instead of SQL might be a good idea, if it doesn't overcomplicate
+things(e.g. for java, using hsqldb or another solution that may be packed inside the jar might be the better way)
+
+To keep the database with the known other stations up to date, the best way may be regularly polling
+all the other stations via ping and setting them to inactive if they do not respond with the ip. 
+If they ping our station with a different ip but the same id afterwards, we update the table accor-
+dingly.
