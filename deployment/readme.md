@@ -39,6 +39,13 @@ chown 1000 ../../data
 
 comment both ``docker rm`` lines and run ``update.sh``
 
+6) create database / migrate
+
+```
+docker exec -ti gsapi python3 ./manage.py reset_db --settings=gsapi.settings.production
+docker exec -ti gsapi python3 ./manage.py migrate --settings=gsapi.settings.production
+```
+
 6) create superuser
 
 ```
