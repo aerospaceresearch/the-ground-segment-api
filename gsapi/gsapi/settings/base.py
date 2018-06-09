@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     #
     'django_extensions',
     'bootstrap4',
+    'rest_framework',
     # local apps
     'accounts',
     'main',
+    'nodes',
 ]
 
 MIDDLEWARE = [
@@ -126,3 +128,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = 'home'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
+}
