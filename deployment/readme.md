@@ -26,6 +26,15 @@ ALLOWED_HOSTS = ['*']
 docker run -d --restart=always --name gsapi-db postgres:10
 ```
 
+5) create data folder
+
+```
+mkdir ../../data
+chown 1000 ../../data
+```
+
+(this folder should be outside of git checkout and Dockerfile)
+
 5) first run of update.sh
 
 comment both ``docker rm`` lines and run ``update.sh``
