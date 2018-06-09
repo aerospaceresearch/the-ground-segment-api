@@ -1,4 +1,6 @@
 # coding: utf-8
+import binascii
+import os
 import os.path
 import uuid
 
@@ -12,7 +14,8 @@ class Node(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
-    name = models.TextField()
+    name = models.CharField(max_length=255)
+    token = models.CharField(max_length=40)
     node_type = models.CharField(max_length=20,
                                  choices=(('recording', 'recording'),
                                           ('processing', 'processing'),))
@@ -23,6 +26,14 @@ class Node(TimeStampedModel):
 
     def __str__(self):
         return f"{self.owner} {self.name}"
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = self.generate_token()
+        return super().save(*args, **kwargs)
+
+    def generate_token(self):
+        return binascii.hexlify(os.urandom(20)).decode()
 
     class Meta:
         ordering = ('name', )

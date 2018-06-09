@@ -2,11 +2,11 @@ from rest_framework import decorators, mixins, viewsets
 
 from .models import Node, Status
 from .serializers import NodeSerializer, StatusSerializer
+from .authentication import NodeOwnerPermission
 
 
 class StatusViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
-    # permission_classes = (permissions.IsAuthenticated,)
     queryset = Status.objects.none()
     serializer_class = StatusSerializer
 
@@ -17,7 +17,7 @@ class StatusViewSet(mixins.CreateModelMixin,
 
 class NodeViewSet(mixins.ListModelMixin,
                   viewsets.GenericViewSet):
-    # permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (NodeOwnerPermission,)
     serializer_class = NodeSerializer
 
     def get_queryset(self):
