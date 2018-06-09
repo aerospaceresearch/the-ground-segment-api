@@ -39,3 +39,8 @@ chown 1000 ../../data
 
 comment both ``docker rm`` lines and run ``update.sh``
 
+6) create superuser
+
+```
+docker exec -ti gsapi ./manage.py createsuperuser --settings gsapi.settings.production
+```
