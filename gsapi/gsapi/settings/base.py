@@ -135,3 +135,12 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
 }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'gsapi',
+        'USER': 'postgres',
+        'HOST': 'db',
+    }
+}
