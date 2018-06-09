@@ -1,6 +1,7 @@
 django<2.1
 django-extensions<2.1
 djangorestframework<3.9
+gunicorn
 ipython
 psycopg2<2.8
 pylama<7.5
