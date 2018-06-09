@@ -15,7 +15,7 @@ class Node(TimeStampedModel):
 
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
     name = models.CharField(max_length=255)
-    token = models.CharField(max_length=40)
+    token = models.CharField(max_length=40, blank=True)
     node_type = models.CharField(max_length=20,
                                  choices=(('recording', 'recording'),
                                           ('processing', 'processing'),))
