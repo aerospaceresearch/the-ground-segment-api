@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd ..
+
 set -e
 
 git pull
@@ -12,3 +14,4 @@ docker run --name gsapi-nginx --net="host" --volumes-from gsapi -v `pwd`/deploym
 
 echo "Cleaning up old docker images..."
 docker rmi $(docker images | grep "<none>" | awk '{print($3)}')
+cd -
