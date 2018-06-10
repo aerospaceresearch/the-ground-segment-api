@@ -21,7 +21,9 @@ class NodeViewSet(mixins.ListModelMixin,
     serializer_class = NodeSerializer
 
     def get_queryset(self):
-        return Node.objects.all()
+        if self.request.user.is_authenticated:
+            return Node.objects.filter(owner=self.request.user)
+        return Node.objects.none()
 
     @decorators.action(methods=['POST'], url_path='status', url_name='status', detail=True)
     def status_create(self, request, *args, **kwargs):
