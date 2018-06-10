@@ -36,7 +36,7 @@ class Node(TimeStampedModel):
         return binascii.hexlify(os.urandom(20)).decode()
 
     class Meta:
-        ordering = ('name', )
+        ordering = ('-created', )
 
 
 class Status(TimeStampedModel):
@@ -55,3 +55,4 @@ class Status(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = 'Status'
+        ordering = ('-created', )
