@@ -56,3 +56,22 @@ class Status(TimeStampedModel):
     class Meta:
         verbose_name_plural = 'Status'
         ordering = ('-created', )
+
+
+def upload_directory(instance, filename):
+    fn = f'{instance.pk}_{filename}'
+    return 'uploads/{0}/{1}'.format(instance.node.pk, fn)
+
+
+class Upload(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    upload = models.FileField(upload_to=upload_directory, max_length=254, null=True, blank=True)
+    upload_type = models.CharField(default='recording', max_length=255)
+    node = models.ForeignKey(Node, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Upload for {self.node}"
+
+    class Meta:
+        ordering = ('-created', )

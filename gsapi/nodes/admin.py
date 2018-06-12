@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Node, Status
+from .models import Node, Status, Upload
 
 
 @admin.register(Node)
@@ -11,3 +11,8 @@ class NodeAdmin(admin.ModelAdmin):
 @admin.register(Status)
 class StatusAdmin(admin.ModelAdmin):
     list_display = ('node', 'status_code', 'node_time_utc')
+
+
+@admin.register(Upload)
+class UploadAdmin(admin.ModelAdmin):
+    list_display = ('node', 'upload_type', 'upload')
