@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'bootstrap4',
     'rest_framework',
     # local apps
-    'accounts',
     'main',
     'nodes',
 ]
@@ -63,7 +62,7 @@ ROOT_URLCONF = 'gsapi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.normpath(os.path.join(SITE_ROOT, 'templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -148,3 +147,7 @@ DATABASES = {
         'HOST': 'db',
     }
 }
+
+
+## django-registration
+ACCOUNT_ACTIVATION_DAYS = 7

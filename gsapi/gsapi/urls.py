@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
 from main.views import HomePageView
@@ -24,8 +25,9 @@ from main.views import HomePageView
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
     path('admin/', admin.site.urls),
-    path('account/', include('accounts.urls')),
-    path('api/', include('nodes.urls')),
+    path('accounts/', include('registration.backends.hmac.urls')),
+    path('login/', auth_views.login, {'template_name': 'login.html'}, name='login'),
+    path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
 ]
 
 if settings.DEBUG:
