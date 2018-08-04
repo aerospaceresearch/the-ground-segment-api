@@ -19,11 +19,12 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
-from main.views import HomePageView
+from main.views import HomePageView, MapView
 
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
+    path('map/', MapView.as_view(), name='map'),
     path('admin/', admin.site.urls),
     path('accounts/', include('registration.backends.hmac.urls')),
     path('api/', include('nodes.urls')),
