@@ -1,9 +1,8 @@
-from rest_framework import decorators, generics, mixins, parsers, viewsets
+from rest_framework import decorators, generics, mixins, parsers, viewsets, response
 
 from .models import Node, Status, Upload
 from .serializers import NodeSerializer, StatusSerializer, UploadSerializer
 from .authentication import NodeOwnerPermission
-
 
 class StatusViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
@@ -55,3 +54,31 @@ class NodeViewSet(mixins.ListModelMixin,
         uv.initial(request, *args, **kwargs)
         uv.request = request
         return uv.create_upload(request, node, *args, **kwargs)
+
+    @decorators.action(detail=False)
+    def coordinates(self, request, *args, **kwargs):
+        nodes = Node.objects.all()
+        # FIXME: build using a serializer
+        _json = {
+            "type": "FeatureCollection",
+            "features": []
+        }
+        for node in nodes:
+            _json['features'].append(
+                {
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [
+                            node.latitude,
+                            node.longitude,
+                            node.altitude
+                        ]
+                    },
+                    "type": "Feature",
+                    "properties": {
+                        "name": node.name,
+                        "popupContent": node.description,
+                    },
+                    "id": node.pk
+                })
+        return response.Response(_json)
