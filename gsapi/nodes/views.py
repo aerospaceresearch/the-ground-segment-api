@@ -81,7 +81,7 @@ class NodeViewSet(mixins.ListModelMixin,
             "type": "FeatureCollection",
             "features": []
         }
-        for node in nodes:
+        for node in nodes.exclude(latitude__isnull=True).exclude(longitude__isnull=True):
             _json['features'].append(
                 {
                     "geometry": {
