@@ -42,48 +42,77 @@
   "url": "",
   "popupContent": "Settrup Station"
   },
-  "id": 1
+  "id": 1,
+  "status": 1
 }]}
 </script>
 
 <script>
-        var map = L.map('map').setView([50.0, 0.0], 3);
+	
+	var map = L.map('map').setView([0.0, 0.0], 1);
+	
 
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-                maxZoom: 18,
-                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                        'Imagery Â© <a href="https://www.mapbox.com/">Mapbox</a>',
-                id: 'mapbox.light'
-        }).addTo(map);
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox.light'
+	}).addTo(map);
 
+	
+	IconStyleActive = L.icon({
+            iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+			iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+    });
+	
+	IconStyleInactive = L.icon({
+            iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+			iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+    });
+	
 
-        function onEachFeature(feature, layer) {
-                var popupContent = "<p>I am a ground station.</p>";
+	function onEachFeature(feature, layer) {
+		var popupContent = "<p>I am a ground station.</p>";
 
-                if (feature.properties && feature.properties.popupContent) {
-                        popupContent += feature.properties.popupContent;
-                }
-                popupContent += "<br>";
-                if (feature.properties && feature.properties.url) {
-                        popupContent += feature.properties.url;
-                }
+		if (feature.properties && feature.properties.popupContent) {
+			popupContent += feature.properties.popupContent;
+		}
+		popupContent += "<br>";
+		if (feature.properties && feature.properties.url) {
+			popupContent += feature.properties.url;
+		}
 
-                layer.bindPopup(popupContent);
-        }
+		layer.bindPopup(popupContent);
+		
+		
+		if (feature.status == 1) {
+		    layer.setIcon(IconStyleActive);
+		}
+		if (feature.status == 0) {
+		    layer.setIcon(IconStyleInactive);
+		}
+	}
 
-        L.geoJSON([station], {
+	
+	L.geoJSON([station], {
 
-                style: function (feature) {
-                        return feature.properties && feature.properties.style;
-                },
+		
 
-                pointToLayer: function (feature, latlng) {
-                        return L.marker(latlng);
-                },
+		pointToLayer: function (feature, latlng) {
+			return L.marker(latlng);
+		},
+		
+		onEachFeature: onEachFeature
+		
+	}).addTo(map);
 
-                onEachFeature: onEachFeature
-        }).addTo(map);
 </script>
 
 {% endblock %}
