@@ -1,8 +1,18 @@
 from rest_framework import decorators, generics, mixins, parsers, viewsets, response
 
-from .models import Node, Status, Upload
-from .serializers import NodeSerializer, StatusSerializer, UploadSerializer
+from .models import Job, Node, Status, Upload
+from .serializers import JobSerializer, NodeSerializer, StatusSerializer, UploadSerializer
 from .authentication import NodeOwnerPermission
+
+class JobViewSet(mixins.CreateModelMixin,
+                  viewsets.GenericViewSet):
+    queryset = Job.objects.none()
+    serializer_class = JobSerializer
+
+    def create_job(self, request, node, *args, **kwargs):
+        request.data['node'] = node.pk
+        return super().create(request, *args, **kwargs)
+
 
 class StatusViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
@@ -37,6 +47,14 @@ class NodeViewSet(mixins.ListModelMixin,
     def get_object(self):
         qs = Node.objects.all()
         return generics.get_object_or_404(qs, pk=self.kwargs['pk'])
+
+    @decorators.action(methods=['POST'], url_path='job', url_name='job', detail=True)
+    def job_create(self, request, *args, **kwargs):
+        node = self.get_object()
+        jv = JobViewSet()
+        jv.initial(request, *args, **kwargs)
+        jv.request = request
+        return jv.create_job(request, node, *args, **kwargs)
 
     @decorators.action(methods=['POST'], url_path='status', url_name='status', detail=True)
     def status_create(self, request, *args, **kwargs):

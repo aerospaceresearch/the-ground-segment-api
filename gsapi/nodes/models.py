@@ -58,6 +58,26 @@ class Status(TimeStampedModel):
         ordering = ('-created', )
 
 
+class Job(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    start = models.DateTimeField()
+    stop = models.DateTimeField()
+
+    node = models.ForeignKey(Node, on_delete=models.CASCADE)
+
+    description = models.TextField(blank=True, null=True)
+    default = models.BooleanField(default=False)
+    task = JSONField(default=dict)
+
+    def __str__(self):
+        return f"Job for {self.node}"
+
+    class Meta:
+        verbose_name_plural = 'Jobs'
+        ordering = ('-created', )
+
+
 def upload_directory(instance, filename):
     fn = f'{instance.pk}_{filename}'
     return 'uploads/{0}/{1}'.format(instance.node.pk, fn)
@@ -69,6 +89,7 @@ class Upload(TimeStampedModel):
     upload = models.FileField(upload_to=upload_directory, max_length=254, null=True, blank=True)
     upload_type = models.CharField(default='recording', max_length=255)
     node = models.ForeignKey(Node, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"Upload for {self.node}"

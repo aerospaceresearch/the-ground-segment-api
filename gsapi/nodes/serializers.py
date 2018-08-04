@@ -1,13 +1,14 @@
 from rest_framework import serializers
 
-from .models import Node, Status, Upload
+from .models import Job, Node, Status, Upload
 
 
-class StatusSerializer(serializers.ModelSerializer):
+class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Status
-        fields = ('id', 'node', 'status_code', 'node_time_utc', 'data')
+        model = Job
+        fields = ('id', 'node', 'start', 'stop', 'description',
+                  'default', 'task')
 
 
 class NodeSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,6 +16,13 @@ class NodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Node
         fields = ('id', 'name', 'node_type')
+
+
+class StatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Status
+        fields = ('id', 'node', 'status_code', 'node_time_utc', 'data')
 
 
 class UploadSerializer(serializers.ModelSerializer):
