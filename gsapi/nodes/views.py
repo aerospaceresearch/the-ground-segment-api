@@ -93,8 +93,8 @@ class NodeViewSet(mixins.ListModelMixin,
                     "geometry": {
                         "type": "Point",
                         "coordinates": [
-                            node.latitude,
                             node.longitude,
+                            node.latitude,
                             node.altitude
                         ]
                     },
