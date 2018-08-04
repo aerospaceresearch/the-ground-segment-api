@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework import decorators, generics, mixins, parsers, viewsets, response
 
 from .models import Job, Node, Status, Upload
@@ -82,6 +84,10 @@ class NodeViewSet(mixins.ListModelMixin,
             "features": []
         }
         for node in nodes.exclude(latitude__isnull=True).exclude(longitude__isnull=True):
+            node_time = node.status_set.first().node_time_utc
+            node_time = node_time.replace(tzinfo=None)
+            # active set to 15 minutes for now
+            status = True if (datetime.datetime.utcnow() - node_time).total_seconds() < 15*60 else False
             _json['features'].append(
                 {
                     "geometry": {
@@ -97,6 +103,7 @@ class NodeViewSet(mixins.ListModelMixin,
                         "name": node.name,
                         "popupContent": node.description,
                     },
-                    "id": node.pk
+                    "id": node.pk,
+                    "status": status,
                 })
         return response.Response(_json)
