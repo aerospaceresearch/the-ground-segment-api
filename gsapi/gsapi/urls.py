@@ -26,6 +26,7 @@ urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('accounts/', include('registration.backends.hmac.urls')),
+    path('api/', include('nodes.urls')),
     path('login/', auth_views.login, {'template_name': 'login.html'}, name='login'),
     path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
 ]
