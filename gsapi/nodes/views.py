@@ -84,7 +84,7 @@ class NodeViewSet(mixins.ListModelMixin,
             "features": []
         }
         for node in nodes.exclude(latitude__isnull=True).exclude(longitude__isnull=True):
-            node_time = node.status_set.first().node_time_utc
+            node_time = node.status_set.exclude(status_code='maintenance').first().node_time_utc
             node_time = node_time.replace(tzinfo=None)
             # active set to 15 minutes for now
             status = True if (datetime.datetime.utcnow() - node_time).total_seconds() < 15*60 else False
