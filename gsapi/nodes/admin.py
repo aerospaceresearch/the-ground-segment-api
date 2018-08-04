@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from .models import Node, Status, Upload
+from .models import Job, Node, Status, Upload
+
+
+@admin.register(Job)
+class JobAdmin(admin.ModelAdmin):
+    list_display = ('node', 'start', 'stop', 'description', 'default')
 
 
 @admin.register(Node)
