@@ -23,95 +23,62 @@
 <div id='map'></div>
 
 <script type="text/javascript">
-  /* replace with data in /api/v1/nodes/coordinates/ */
-  var station = {
-  "type": "FeatureCollection",
-  "features": [
-  {
-  "geometry": {
-  "type": "Point",
-  "coordinates": [
-  7.624722,
-  52.485833,
-  40.0
-  ]
-  },
-  "type": "Feature",
-  "properties": {
-  "name": "Settrup Station",
-  "url": "",
-  "popupContent": "Settrup Station"
-  },
-  "id": 1,
-  "status": 1
-}]}
+fetch('/api/v1/nodes/coordinates/')
+.then(res => res.json())
+.then((station) => {
+  L.geoJSON([station], {
+    pointToLayer: function (feature, latlng) {
+      return L.marker(latlng);
+    },
+    onEachFeature: onEachFeature
+  }).addTo(map);
+})
+.catch(err => { throw err });
 </script>
 
 <script>
-	
-	var map = L.map('map').setView([0.0, 0.0], 1);
-	
+  var map = L.map('map').setView([0.0, 0.0], 1);
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+              maxZoom: 18,
+              attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                           '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                           'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+              id: 'mapbox.light'
+  }).addTo(map);
 
-	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		maxZoom: 18,
-		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		id: 'mapbox.light'
-	}).addTo(map);
+  IconStyleActive = L.icon({
+    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
 
-	
-	IconStyleActive = L.icon({
-            iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-			iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-    });
-	
-	IconStyleInactive = L.icon({
-            iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-			iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-    });
-	
+  IconStyleInactive = L.icon({
+    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
 
-	function onEachFeature(feature, layer) {
-		var popupContent = "<p>I am a ground station.</p>";
-
-		if (feature.properties && feature.properties.popupContent) {
-			popupContent += feature.properties.popupContent;
-		}
-		popupContent += "<br>";
-		if (feature.properties && feature.properties.url) {
-			popupContent += feature.properties.url;
-		}
-
-		layer.bindPopup(popupContent);
-		
-		
-		if (feature.status == 1) {
-		    layer.setIcon(IconStyleActive);
-		}
-		if (feature.status == 0) {
-		    layer.setIcon(IconStyleInactive);
-		}
-	}
-
-	
-	L.geoJSON([station], {
-
-		
-
-		pointToLayer: function (feature, latlng) {
-			return L.marker(latlng);
-		},
-		
-		onEachFeature: onEachFeature
-		
-	}).addTo(map);
+  function onEachFeature(feature, layer) {
+    var popupContent = "<p>I am a ground station.</p>";
+    if (feature.properties && feature.properties.popupContent) {
+      popupContent += feature.properties.popupContent;
+    }
+    popupContent += "<br>";
+    if (feature.properties && feature.properties.url) {
+      popupContent += feature.properties.url;
+    }
+    layer.bindPopup(popupContent);
+    if (feature.status == 1) {
+      layer.setIcon(IconStyleActive);
+    }
+    if (feature.status == 0) {
+      layer.setIcon(IconStyleInactive);
+    }
+  }
 
 </script>
 
