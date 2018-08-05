@@ -26,20 +26,24 @@ class JobViewSet(mixins.CreateModelMixin,
 
 class StatusViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
+    permission_classes = (NodeOwnerPermission,)
     queryset = Status.objects.none()
     serializer_class = StatusSerializer
 
     def create_status(self, request, node, *args, **kwargs):
+        self.check_object_permissions(request, node)
         request.data['node'] = node.pk
         return super().create(request, *args, **kwargs)
 
 
 class UploadViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
+    permission_classes = (NodeOwnerPermission,)
     queryset = Upload.objects.none()
     serializer_class = UploadSerializer
 
     def create_upload(self, request, node, *args, **kwargs):
+        self.check_object_permissions(request, node)
         request.data['node'] = node.pk
         return super().create(request, *args, **kwargs)
 
