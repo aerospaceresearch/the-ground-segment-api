@@ -20,7 +20,9 @@ payload = {'status_code': 'OK',
                'cpu_count': cpu_count
                }
            }
-
-r = requests.post(url, json=payload, headers=headers)
-assert r.status_code == 201
-print(r.text)
+try:
+    r = requests.post(url, json=payload, headers=headers)
+    assert r.status_code == 201
+    print(time.time(), r.text)
+except:
+    print("Unexpected error:", time.time())
