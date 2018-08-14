@@ -12,6 +12,5 @@ url = 'http://localhost:8023/api/v1/nodes/' + NODE_UUID + '/uploads/'
 headers = {'Authorization': 'Token ' + NODE_TOKEN}
 
 r = requests.get(url, headers=headers)
-print(r.status_code)
-#assert r.status_code == 200
+assert r.status_code == 200
 pprint(json.loads(r.text))
