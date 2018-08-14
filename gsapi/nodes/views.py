@@ -37,6 +37,7 @@ class StatusViewSet(mixins.CreateModelMixin,
 
 
 class UploadViewSet(mixins.CreateModelMixin,
+                    mixins.ListModelMixin,
                     viewsets.GenericViewSet):
     permission_classes = (NodeOwnerPermission,)
     queryset = Upload.objects.none()
@@ -46,6 +47,11 @@ class UploadViewSet(mixins.CreateModelMixin,
         self.check_object_permissions(request, node)
         request.data['node'] = node.pk
         return super().create(request, *args, **kwargs)
+
+    def list(self, request, node, *args, **kwargs):
+        self.check_object_permissions(request, node)
+        self.queryset = Upload.objects.filter(node=node)
+        return super().list(request, *args, **kwargs)
 
 
 class NodeViewSet(mixins.ListModelMixin,
@@ -94,6 +100,14 @@ class NodeViewSet(mixins.ListModelMixin,
         uv.initial(request, *args, **kwargs)
         uv.request = request
         return uv.create_upload(request, node, *args, **kwargs)
+
+    @decorators.action(methods=['GET'], url_path='uploads', url_name='uploads', detail=True)
+    def upload_list(self, request, *args, **kwargs):
+        node = self.get_object()
+        uv = UploadViewSet()
+        uv.initial(request, *args, **kwargs)
+        uv.request = request
+        return uv.list(request, node, *args, **kwargs)
 
     @decorators.action(detail=False)
     def coordinates(self, request, *args, **kwargs):
