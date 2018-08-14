@@ -2,37 +2,80 @@
 
 {% load bootstrap4 %}
 
+
+{% block bootstrap4_extra_head %}
+<style>
+header {
+  padding: 80px 0 10px;
+}
+
+@media (min-width: 992px) {
+  header {
+    padding: 80px 0 10px;
+  }
+}
+</style>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+{% endblock %}
+
 {% block bootstrap4_content %}
-    <div class="container">
+{% block nav %}
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#mainNav">The-Groundstation-API</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              {% block nav-home %}<a class="nav-link js-scroll-trigger" href="{% url 'home' %}">Home</a>{% endblock %}
+            </li>
+            <li class="nav-item">
+              {% block nav-map %}<a class="nav-link js-scroll-trigger" href="{% url 'map' %}">Map</a>{% endblock %}
+            </li>
+            <li class="nav-item">
+              {% if not request.user.is_authenticated %}
+              {% block nav-login %}<a class="nav-link js-scroll-trigger" href="{% url 'login' %}">Login</a>{% endblock %}
+              {% else %}
+              <a class="nav-link js-scroll-trigger" href="{% url 'logout' %}">Logout</a>
+              {% endif %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+        {% endblock %}
+ <div class="container">
+ <header>
 <div class="row">
     <div class="col-sm">
         <h1>{% block bootstrap4_title %}{% block title %}(no title){% endblock %}{% endblock %}</h1>
     </div>
 </div>
-        {% block nav %}
-<div class="row">
-    <div class="col-sm">
-            {% block nav-home %}<a href="{% url 'home' %}">Home</a>{% endblock %}
-    </div>
-    <div class="col-sm">
-    </div>
-    <div class="col-sm">
-            {% if not request.user.is_authenticated %}
-                {% block nav-login %}<a href="{% url 'login' %}">login</a>{% endblock %}
-            {% else %}
-                <a href="{% url 'logout' %}">logout</a>
-            {% endif %}
-    </div>
-</div>
-        {% endblock %}
+</header>
+ {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 
-        {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            {% block content %}(no content){% endblock %}
+          </div>
+        </div>
+      </div>
+{% endblock %}
 
-<div class="row">
-    <div class="col-sm">
 
-        {% block content %}(no content){% endblock %}
-    </div>
-</div>
+{% block bootstrap4_extra_script %}
+<script>
+(function($) {
+  "use strict"; // Start of use strict
 
+  // Closes responsive menu when a scroll trigger link is clicked
+  $('.js-scroll-trigger').click(function() {
+    $('.navbar-collapse').collapse('hide');
+  });
+
+})(jQuery);
+</script>
 {% endblock %}
