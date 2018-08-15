@@ -25,6 +25,7 @@ class JobViewSet(mixins.CreateModelMixin,
 
 
 class StatusViewSet(mixins.CreateModelMixin,
+                    mixins.ListModelMixin,
                     viewsets.GenericViewSet):
     permission_classes = (NodeOwnerPermission,)
     queryset = Status.objects.none()
@@ -34,6 +35,11 @@ class StatusViewSet(mixins.CreateModelMixin,
         self.check_object_permissions(request, node)
         request.data['node'] = node.pk
         return super().create(request, *args, **kwargs)
+
+    def list(self, request, node, *args, **kwargs):
+        self.check_object_permissions(request, node)
+        self.queryset = Status.objects.filter(node=node)
+        return super().list(request, *args, **kwargs)
 
 
 class UploadViewSet(mixins.CreateModelMixin,
@@ -84,8 +90,14 @@ class NodeViewSet(mixins.ListModelMixin,
         jv.request = request
         return jv.create_job(request, node, *args, **kwargs)
 
-    @decorators.action(methods=['POST'], url_path='status', url_name='status', detail=True)
-    def status_create(self, request, *args, **kwargs):
+    @decorators.action(methods=['GET', 'POST'], url_path='status', url_name='status', detail=True)
+    def status_list_create(self, request, *args, **kwargs):
+        if request.method == 'GET':
+            node = self.get_object()
+            sv = StatusViewSet()
+            sv.initial(request, *args, **kwargs)
+            sv.request = request
+            return sv.list(request, node, *args, **kwargs)
         node = self.get_object()
         sv = StatusViewSet()
         sv.initial(request, *args, **kwargs)
