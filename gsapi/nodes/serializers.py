@@ -22,7 +22,8 @@ class StatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Status
-        fields = ('id', 'node', 'status_code', 'node_time_utc', 'data')
+        fields = ('id', 'node', 'status_code', 'node_time_utc', 'data', 'created')
+        read_only_fields = ('created',)
 
 
 class UploadSerializer(serializers.ModelSerializer):
